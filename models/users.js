@@ -1,3 +1,7 @@
+const mongoose = require('mongoose');
+const validator = require('validator');
+
+
 const User = new mongoose.Schema({
     name: { type: String, required: true, minLength: 2, maxLength: 30 },
     avatar: {
@@ -10,4 +14,4 @@ const User = new mongoose.Schema({
         }
     }
 });
-module.exports = mongoose.model('User', User);
+module.exports = mongoose.model('users', User);

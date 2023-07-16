@@ -4,10 +4,23 @@ const User = require('../models/users');
 const getUsers = (req, res) => {
     console.log(req);
     console.log(req.body);
-    User.find({}).catch((err) => console.error(err))
+    User.find({}).then((users) => {
+        res.status(200).send(users);
+    }).catch((err) => {
+        res.status(500).send({ message: 'get users faild', err })
+    })
 }
 
 // GET /users/:userId - returns a user by _id
 // POST /users — creates a new user
+const createUser = (req, res) => {
+    console.log('req', req);
+    const { name, avatar } = req.body;
+    User.create({ name, avatar })
+        .then((data) => { console.log(data); res.send(data) })
+        .catch((err) => {
+            res.status(500).send('Failed creating user', err)
+        })
+}
 
-module.exports = { getUsers }
+module.exports = { getUsers, createUser }
