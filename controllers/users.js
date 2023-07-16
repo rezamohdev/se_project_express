@@ -3,7 +3,7 @@ const User = require('../models/users');
 // GET /users — returns all users
 const getUsers = (req, res) => {
     console.log(req);
-    console.log(req.body);
+    console.log('request body:', req.body);
     User.find({}).then((users) => {
         res.status(200).send(users);
     }).catch((err) => {
@@ -15,6 +15,8 @@ const getUsers = (req, res) => {
 // POST /users — creates a new user
 const createUser = (req, res) => {
     console.log('req', req);
+    console.log('request body:', req.body);
+
     const { name, avatar } = req.body;
     User.create({ name, avatar })
         .then((data) => { console.log(data); res.send(data) })
