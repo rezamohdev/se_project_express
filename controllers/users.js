@@ -12,7 +12,7 @@ const getUsers = (req, res) => {
 }
 
 // GET /users/:userId - returns a user by _id
-const findUser = (req, res) => {
+const getUser = (req, res) => {
     const { userId } = req.params;
     User.findById(userId).
         then((data) => {
@@ -38,4 +38,4 @@ const createUser = (req, res) => {
         })
 }
 
-module.exports = { getUsers, createUser, findUser }
+module.exports = { getUsers, createUser, getUser }
