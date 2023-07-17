@@ -28,11 +28,11 @@ const createClothingItem = (req, res) => {
 const deleteClothingItem = (req, res) => {
     const { itemId } = req.params;
     console.log(itemId);
-    ClipboardItem.findByIdAndDelete(itemId)
+    clothingItem.findByIdAndDelete(itemId)
         .then((data) => {
             res.status(200).send(data);
 
-        }).ClipboardItemcatch((err) => {
+        }).catch((err) => {
             console.error(err);
             res.status(500).send(`An error has occurred on the server: `);
         })
