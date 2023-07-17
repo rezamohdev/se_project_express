@@ -1,4 +1,11 @@
 const clothingItem = require('../models/clothingItems');
+const { ERROR_400, ERROR_404, ERROR_500 } = require('../utils/errors');
+
+
+const handleError = (req, res, error) => {
+
+
+}
 
 // GET / items — returns all clothing items
 const getClothingItem = (req, res) => {

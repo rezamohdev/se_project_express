@@ -1,3 +1,4 @@
-const ERROR_CODE = 400;
-
-if (err.name === 'SomeErrorName') return res.status(ERROR_CODE).send({ message: "Appropriate error message" })
+const ERROR_400 = 400;
+const ERROR_404 = 404;
+const ERROR_500 = 500;
+export { ERROR_400, ERROR_404, ERROR_500 };
