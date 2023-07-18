@@ -13,7 +13,7 @@ const handleError = (req, res, error) => {
             message: 'The request is sent to a none existense resource!'
         });
     }
-    return res.status(ERROR_500).send({
+    return res.status(ERROR_404).send({
         message: 'Passed invalid data !'
     });
 }
