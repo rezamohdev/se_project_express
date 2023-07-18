@@ -15,7 +15,7 @@ const handleError = (req, res, error) => {
         });
     }
     return res.status(ERROR_404).send({
-        message: 'Passed invalid datam, Faild to create user  !'
+        message: 'Passed invalid data!'
     });
 }
 
@@ -23,12 +23,14 @@ const handleError = (req, res, error) => {
 const getUsers = (req, res) => {
     // console.log(req);
     // console.log('request body:', req.body);
-    User.find({}).then((users) => {
-        res.status(200).send(users);
-    }).catch((err) => {
-        // res.status(500).send({ message: 'get users faild, error : ', err })
-        handleError(req, res, err);
-    })
+    User.find({})
+        .orFail()
+        .then((users) => {
+            res.status(200).send(users);
+        }).catch((err) => {
+            // res.status(500).send({ message: 'get users faild, error : ', err })
+            handleError(req, res, err);
+        })
 }
 
 // GET /users/:userId - returns a user by _id
@@ -67,6 +69,5 @@ const createUser = (req, res) => {
 
         });
 }
-// 64b6a08eb5dd54fcb47dacbd item
-//  user
+
 module.exports = { getUsers, createUser, getUser }
