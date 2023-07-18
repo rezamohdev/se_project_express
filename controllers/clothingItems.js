@@ -20,8 +20,13 @@ const handleError = (req, res, error) => {
 
 // GET / items — returns all clothing items
 const getClothingItem = (req, res) => {
-    clothingItem.find({}).
-        then((data) => {
+    clothingItem.find({})
+        .orFail(() => {
+            const error = new Error("Item ID not found");
+            error.statusCode = 404;
+            throw error; // Remember to throw an error so .catch handles it instead of .then
+        })
+        .then((data) => {
             res.status(200).send(data);
         })
         .catch((err) => {
