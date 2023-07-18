@@ -1,4 +1,23 @@
 const User = require('../models/users');
+const { ERROR_400, ERROR_500, ERROR_404 } = require('../utils/errors');
+
+
+
+const handleError = (req, res, error) => {
+    console.error(`error is : ${error}`)
+    if (error.name === 'ValidationError' || error.name === 'AssertionError') {
+        return res.status(ERROR_400).send({
+            message: 'Passed invalid data !'
+        });
+    } else if (error.name === 'CastError') {
+        return res.status(ERROR_400).send({
+            message: 'The request is sent to a none existense resource!'
+        });
+    }
+    return res.status(ERROR_500).send({
+        message: 'Passed invalid datam, Faild to create user  !'
+    });
+}
 
 // GET /users — returns all users
 const getUsers = (req, res) => {
@@ -7,7 +26,8 @@ const getUsers = (req, res) => {
     User.find({}).then((users) => {
         res.status(200).send(users);
     }).catch((err) => {
-        res.status(500).send({ message: 'get users faild, error : ', err })
+        // res.status(500).send({ message: 'get users faild, error : ', err })
+        handleError(req, res, err);
     })
 }
 
@@ -22,12 +42,14 @@ const getUser = (req, res) => {
         })
         .then((data) => {
             console.log(userId);
-            console.log(data); res.send(data)
+            res.send(data)
         }).
         catch((err) => {
             console.error(err);
-            res.status(500).send('Failed finding user by id, error :', err)
-        })
+            // res.status(500).send('Failed finding user by id, error :', err)
+            handleError(req, res, err);
+
+        });
 }
 // POST /users — creates a new user
 const createUser = (req, res) => {
@@ -37,10 +59,14 @@ const createUser = (req, res) => {
     const { name, avatar } = req.body;
     console.log(name, avatar);
     User.create({ name, avatar })
-        .then((data) => { console.log(data); res.send(data) })
+        .then((data) => { res.send(data) })
         .catch((err) => {
-            res.status(500).send('Failed creating user', err)
-        })
-}
+            // res.status(500).send('Failed creating user', err)
+            // res.status(500).send('Failed creating user', err);
+            handleError(req, res, err);
 
+        });
+}
+// 64b6a08eb5dd54fcb47dacbd item
+//  user
 module.exports = { getUsers, createUser, getUser }

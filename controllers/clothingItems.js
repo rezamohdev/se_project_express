@@ -36,8 +36,8 @@ const getClothingItem = (req, res) => {
 }
 // POST / items — creates a new item
 const createClothingItem = (req, res) => {
-    console.log(req.user._id);
-    console.log(req.body);
+    console.log('user id: ', req.user._id);
+    // console.log(req.body);
     const { name, weather, imageUrl } = req.body;
     clothingItem.create({ name, weather, imageUrl, owner: req.user._id }).
         then((data) => {
@@ -53,7 +53,7 @@ const createClothingItem = (req, res) => {
 // DELETE / items /: itemId — deletes an item by _id
 const deleteClothingItem = (req, res) => {
     const { itemId } = req.params;
-    console.log(itemId);
+    console.log('item id:', itemId);
     clothingItem.findByIdAndDelete(itemId)
         .then((data) => {
             res.status(200).send(data);
