@@ -38,4 +38,9 @@ module.exports.dislikeItem = (req, res) => clothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $pull: { likes: req.user._id } }, // remove _id from the array
     { new: true },
-)
+).orFail()
+    .then((data) => {
+        return res.status(200).send(data);
+    }).catch((err) => {
+        handleError(req, res, err);
+    })
