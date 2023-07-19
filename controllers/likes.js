@@ -17,19 +17,31 @@ const handleError = (req, res, error) => {
     });
 }
 // PUT / items /: itemId / likes — like an item
-module.exports.likeItem = (req, res) => ClothingItem.findByIdAndUpdate(
-    req.params.itemId,
-    { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
-    { new: true },
-    (err, updatedItem) => {
-        if (err) {
-            return res.status(500).json({ error: "An error occurred while liking the item." });
-        }
-        return res.json(updatedItem); // This will set the correct 'Content-Type' header to 'application/json'
+module.exports.likeItem = (req, res) => {
+    console.log(req)
+    itemId = req.params.itemId;
+    if (!itemId) {
+        res.status(ERROR_404).send('User Id not found');
     }
-).orFial().catch((err) => {
-    handleError(req, res, err);
-});
+
+    console.log("test");
+
+    ClothingItem.findByIdAndUpdate(
+        itemId,
+        { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
+        { new: true },
+        (err, updatedItem) => {
+
+            console.log("test");
+            if (err) {
+                return res.status(500).json({ error: "An error occurred while liking the item." });
+            }
+            return res.header('Content-Type', 'application/json').json(updatedItem);
+        }
+    ).orFial().catch((err) => {
+        handleError(req, res, err);
+    });
+}
 //...
 
 // DELETE / items /: itemId / likes — unlike an item
