@@ -17,9 +17,6 @@ router.use((req, res) => {
     }
 });
 
-// router.use((req, res) => {
-//     res.status(404).send({ message: 'Can not process request at this time' });
-// })
 
 
 module.exports = router;
