@@ -14,6 +14,9 @@ app.use((req, res, next) => {
 });
 
 app.use(routes);
+app.all("*", (req, res) => {
+    res.status(404).send({ message: "THIS IS FROM APP.JS" })
+})
 app.listen(PORT, () => {
     console.log('App started on port: ' + PORT);
 })
