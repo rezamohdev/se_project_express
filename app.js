@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 
 app.use(routes);
 app.all("*", (req, res) => {
-    res.status(404).send({ message: "THIS IS FROM APP.JS" })
+    res.status(404).send({ message: "The requested resource not found" })
 })
 app.listen(PORT, () => {
     console.log('App started on port: ' + PORT);
