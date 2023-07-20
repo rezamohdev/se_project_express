@@ -15,7 +15,6 @@ const handleError = (req, res, error) => {
             message: 'Passed invalid data !'
         });
     } else {
-
         return res.status(ERROR_500).send({
             message: 'An error has occurred on the server.'
         });
