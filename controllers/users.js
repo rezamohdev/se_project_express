@@ -1,23 +1,5 @@
 const User = require('../models/users');
-const { ERROR_400, ERROR_500, ERROR_404 } = require('../utils/errors');
-
-
-
-const handleError = (req, res, error) => {
-    console.error(`error is : ${error}`)
-    if (error.name === 'ValidationError' || error.name === 'AssertionError') {
-        return res.status(ERROR_400).send({
-            message: 'Passed invalid data !'
-        });
-    } else if (error.name === 'CastError') {
-        return res.status(ERROR_400).send({
-            message: 'The request is sent to a none existense resource!'
-        });
-    }
-    return res.status(ERROR_404).send({
-        message: 'Passed invalid data!'
-    });
-}
+const handleError = require('../utils/config');
 
 // GET /users — returns all users
 const getUsers = (req, res) => {
@@ -37,11 +19,6 @@ const getUsers = (req, res) => {
 const getUser = (req, res) => {
     const { userId } = req.params;
     User.findById(userId)
-        .orFail(() => {
-            const error = new Error("User ID not found");
-            error.statusCode = 404;
-            throw error; // Remember to throw an error so .catch handles it instead of .then
-        })
         .then((data) => {
             console.log(userId);
             res.send(data)

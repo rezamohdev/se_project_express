@@ -1,31 +1,8 @@
 const clothingItem = require('../models/clothingItems');
-const { ERROR_400, ERROR_404, ERROR_500 } = require('../utils/errors');
-
-
-const handleError = (req, res, error) => {
-    console.error(`error is : ${error}`)
-    if (error.name === 'ValidationError' || error.name === 'AssertionError') {
-        return res.status(ERROR_400).send({
-            message: 'Passed invalid data !'
-        });
-    } else if (error.name === 'CastError') {
-        return res.status(ERROR_400).send({
-            message: 'The request is sent to a none existense resource!'
-        });
-    }
-    return res.status(ERROR_404).send({
-        message: 'Passed invalid data !'
-    });
-}
-
+const handleError = require('../utils/config');
 // GET / items — returns all clothing items
 const getClothingItem = (req, res) => {
     clothingItem.find({})
-        .orFail(() => {
-            const error = new Error("Item ID not found");
-            error.statusCode = ERROR_404;
-            throw error; // Remember to throw an error so .catch handles it instead of .then
-        })
         .then((data) => {
             res.status(200).send(data);
         })
@@ -40,7 +17,8 @@ const createClothingItem = (req, res) => {
     // console.log(req.body);
     const { name, weather, imageUrl } = req.body;
     clothingItem.create({ name, weather, imageUrl, owner: req.user._id }).
-        then((data) => {
+        orFail()
+        .then((data) => {
             res.status(200).send(data);
         }).
         catch((err) => {
