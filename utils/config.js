@@ -1,6 +1,6 @@
 const { ERROR_400, ERROR_404, ERROR_500 } = require('./errors');
 
-module.exports.handleError = (req, res, error) => {
+const handleError = (req, res, error) => {
     console.error(`error is : ${error}`)
     if (error.name === 'ValidationError') {
         res.status(ERROR_400).send({
@@ -14,10 +14,12 @@ module.exports.handleError = (req, res, error) => {
         res.status(ERROR_404).send({
             message: 'Passed invalid data !'
         });
+    } else {
+
+        return res.status(ERROR_500).send({
+            message: 'An error has occurred on the server.'
+        });
     }
-    return res.status(ERROR_500).send({
-
-        message: 'An error has occurred on the server.'
-
-    });
 }
+
+module.exports = handleError;

@@ -1,9 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { ERROR_404 } = require('./utils/errors')
 const rateLimit = require('express-rate-limit')
-const routes = require('./routes');
 const helmet = require('helmet')
+const { ERROR_404 } = require('./utils/errors')
+const routes = require('./routes');
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db');
