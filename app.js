@@ -1,7 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { ERROR_404 } = require('./utils/errors')
+const rateLimit = require('express-rate-limit')
 const routes = require('./routes');
+const helmet = require('helmet')
+
 
 mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db');
 const { PORT = 3001 } = process.env;
@@ -14,6 +17,17 @@ app.use((req, res, next) => {
     next();
 });
 
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+// Apply the rate limiting middleware to all requests
+app.use(limiter)
+
+app.use(helmet())
 app.use(routes);
 app.all("*", (req, res) => {
     res.status(ERROR_404).send({ message: "The requested resource not found" })
