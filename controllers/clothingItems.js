@@ -23,7 +23,7 @@ const getClothingItem = (req, res) => {
     clothingItem.find({})
         .orFail(() => {
             const error = new Error("Item ID not found");
-            error.statusCode = 404;
+            error.statusCode = ERROR_404;
             throw error; // Remember to throw an error so .catch handles it instead of .then
         })
         .then((data) => {

@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { ERROR_404 } = require('./utils/errors')
 
 mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db');
 const { PORT = 3001 } = process.env;
@@ -15,7 +16,7 @@ app.use((req, res, next) => {
 
 app.use(routes);
 app.all("*", (req, res) => {
-    res.status(404).send({ message: "The requested resource not found" })
+    res.status(ERROR_404).send({ message: "The requested resource not found" })
 })
 app.listen(PORT, () => {
     console.log('App started on port: ' + PORT);
