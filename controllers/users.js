@@ -15,9 +15,17 @@ const getUsers = (req, res) => {
 const getUser = (req, res) => {
     const { userId } = req.params;
     User.findById(userId)
+        .orFail(() => {
+
+            const error = new Error("User ID not found");
+
+            error.statusCode = 404;
+
+            throw error; // Remember to throw an error so .catch handles it instead of .then 
+
+        })
         .then((data) => {
-            console.log(userId);
-            res.status(200).send(data)
+            res.status(200).send(data);
         }).
         catch((err) => {
             console.error(err);

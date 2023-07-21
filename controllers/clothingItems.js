@@ -16,8 +16,7 @@ const createClothingItem = (req, res) => {
     console.log('user id: ', req.user._id);
     // console.log(req.body);
     const { name, weather, imageUrl } = req.body;
-    clothingItem.create({ name, weather, imageUrl, owner: req.user._id }).
-        orFail()
+    clothingItem.create({ name, weather, imageUrl, owner: req.user._id })
         .then((data) => {
             res.status(200).send(data);
         }).
@@ -33,6 +32,7 @@ const deleteClothingItem = (req, res) => {
     const { itemId } = req.params;
     console.log('item id:', itemId);
     clothingItem.findByIdAndDelete(itemId)
+        .orFail()
         .then((data) => {
             res.status(200).send(data.toJSON());
 
