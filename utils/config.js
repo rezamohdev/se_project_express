@@ -14,9 +14,11 @@ module.exports.handleError = (req, res, error) => {
         res.status(ERROR_404).send({
             message: 'Passed invalid data !'
         });
+    } else {
+
+        res.status(ERROR_500).send({
+            message: 'An error has occurred on the server.'
+        });
     }
-    return res.status(ERROR_500).send({
-        message: 'An error has occurred on the server.'
-    });
 }
 

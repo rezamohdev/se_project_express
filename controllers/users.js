@@ -1,5 +1,5 @@
 const User = require('../models/users');
-const handleError = require('../utils/config');
+const { handleError } = require('../utils/config');
 
 // GET /users — returns all users
 const getUsers = (req, res) => {
@@ -15,15 +15,7 @@ const getUsers = (req, res) => {
 const getUser = (req, res) => {
     const { userId } = req.params;
     User.findById(userId)
-        .orFail(() => {
-
-            const error = new Error("User ID not found");
-
-            error.statusCode = 404;
-
-            throw error; // Remember to throw an error so .catch handles it instead of .then 
-
-        })
+        .orFail()
         .then((data) => {
             res.status(200).send(data);
         }).

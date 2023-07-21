@@ -1,5 +1,5 @@
 const clothingItem = require('../models/clothingItems');
-const handleError = require('../utils/config');
+const { handleError } = require('../utils/config');
 // GET / items — returns all clothing items
 const getClothingItem = (req, res) => {
     clothingItem.find({})

@@ -1,5 +1,5 @@
 const clothingItem = require('../models/clothingItems');
-const handleError = require('../utils/config');
+const { handleError } = require('../utils/config');
 
 // PUT / items /: itemId / likes — like an item
 module.exports.likeItem = (req, res) => {
