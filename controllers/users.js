@@ -1,5 +1,11 @@
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const { handleError } = require('../utils/config');
+const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+    expiresIn: "7d",
+});
+
 
 // GET /users — returns all users
 const getUsers = (req, res) => {
@@ -27,13 +33,31 @@ const getUser = (req, res) => {
 }
 // POST /users — creates a new user
 const createUser = (req, res) => {
-    const { name, avatar } = req.body;
+    const { name, avatar, email, password } = req.body;
     console.log(name, avatar);
-    User.create({ name, avatar })
-        .then((data) => { res.send(data) })
-        .catch((err) => {
-            handleError(req, res, err);
-        });
-}
+    User.findOne({ email }).then((user) => {
+        if (!user) {
+            bcrypt.hash(password, 10).then((hash) => {
+                User.create({ name, avatar, email, password: hash })
+                    .then((data) => { res.status(201).send(data) })
+                    .catch((err) => { handleError(req, res, err); });
+            });
+        }
+    }).catch((err) => {
+        throw new Error('This email address is already registered! please try another one.')
+    });
 
-module.exports = { getUsers, createUser, getUser }
+};
+
+const login = (req, res) => {
+    const { email, password } = req.body;
+    return User.findUserByCredentials(email, password).
+        then((user) => {
+            res.send({ token });
+        })
+        .catch((err) => {
+            res.status(401).send({ message: err.message });
+        });
+};
+
+module.exports = { getUsers, createUser, getUser, loginUser }
