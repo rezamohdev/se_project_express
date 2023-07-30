@@ -30,18 +30,26 @@ const createClothingItem = (req, res) => {
 // DELETE / items /: itemId — deletes an item by _id
 const deleteClothingItem = (req, res) => {
     const { itemId } = req.params;
+    const { loggedinUserId } = req.body;
+    const item = User.findOne({ _id: itemId });
+
     console.log('item id:', itemId);
-    clothingItem.findByIdAndDelete(itemId)
-        .orFail()
-        .then((data) => {
-            res.status(200).send(data.toJSON());
+    // check if the user is the item owner
+    if (loggedinUserId === item.owner) {
+        console.log('owner is confirmed!')
+        clothingItem.findByIdAndDelete(itemId)
+            .orFail()
+            .then((data) => {
+                res.status(200).send(data.toJSON());
 
-        }).catch((err) => {
-            console.error(err);
-            // res.status(500).send(`An error has occurred on the server: `);
-            handleError(req, res, err);
+            }).catch((err) => {
+                console.error(err);
+                // res.status(500).send(`An error has occurred on the server: `);
+                handleError(req, res, err);
 
-        })
+            });
+    }
+    res.status(403).send('You are not authried to delete other user\'s item');
 }
 
 module.exports = { getClothingItem, createClothingItem, deleteClothingItem };

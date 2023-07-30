@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
+const cors = require("cors");
 const { ERROR_404 } = require('./utils/errors')
 const routes = require('./routes');
 const auth = require('./middlewares/auth');
@@ -22,7 +23,7 @@ const limiter = rateLimit({
 
 // Apply the rate limiting middleware to all requests
 app.use(limiter)
-
+app.use(cors());
 app.use(helmet())
 app.use(routes);
 app.all("*", (req, res) => {
