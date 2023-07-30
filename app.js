@@ -5,18 +5,13 @@ const helmet = require('helmet')
 const { ERROR_404 } = require('./utils/errors')
 const routes = require('./routes');
 const auth = require('./middlewares/auth');
+const { login, createUser } = require('./controllers/users');
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db');
 const { PORT = 3001 } = process.env;
 const app = express();
 app.use(express.json());
-app.use((req, res, next) => {
-    req.user = {
-        _id: '5d8b8592978f8bd833ca8133'// paste the _id of the test user created in the previous step
-    };
-    next();
-});
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes

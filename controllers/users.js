@@ -32,6 +32,7 @@ const getUser = (req, res) => {
 
 const getCurrentUser = (req, res) => {
     const { userId } = req.params;
+    console.log(userId);
     User.findById(userId)
         .orFail()
         .then((data) => {
@@ -59,7 +60,13 @@ const createUser = (req, res) => {
 
 };
 const updateProfile = (req, res) => {
-    const { userId } = req.params;
+    const { userId, } = req.params;
+    const { name, avatar } = req.body;
+    User.findByIdAndUpdate(userId, { $set: { name, avatar } }, { new: true, runValidators: true })
+        .orFail()
+        .then((data) => { res.send(data) }).catch((err) => {
+            throw new Error('This email address is already registered! please try another one.')
+        });
 }
 
 const login = (req, res) => {
