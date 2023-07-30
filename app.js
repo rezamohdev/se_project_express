@@ -32,6 +32,8 @@ app.use(routes);
 app.all("*", (req, res) => {
     res.status(ERROR_404).send({ message: "The requested resource not found" })
 })
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.listen(PORT, () => {
     console.log(`App started on port: ${PORT}`);
 })
