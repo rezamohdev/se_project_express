@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
 const { ERROR_404 } = require('./utils/errors')
 const routes = require('./routes');
+const auth = require('./middlewares/auth');
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db');
@@ -34,6 +35,8 @@ app.all("*", (req, res) => {
 })
 app.post('/signin', login);
 app.post('/signup', createUser);
+
+app.use(auth);
 app.listen(PORT, () => {
     console.log(`App started on port: ${PORT}`);
 })

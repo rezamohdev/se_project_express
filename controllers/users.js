@@ -29,6 +29,18 @@ const getUser = (req, res) => {
 
         });
 }
+
+const getCurrentUser = (req, res) => {
+    const { userId } = req.params;
+    User.findById(userId)
+        .orFail()
+        .then((data) => {
+            res.status(200).send(data);
+        }).catch((err) => {
+            handleError(req, res, err);
+        })
+}
+
 // POST /users — creates a new user
 const createUser = (req, res) => {
     const { name, avatar, email, password } = req.body;
@@ -46,6 +58,9 @@ const createUser = (req, res) => {
     });
 
 };
+const updateProfile = (req, res) => {
+    const { userId } = req.params;
+}
 
 const login = (req, res) => {
     const { email, password } = req.body;
@@ -62,4 +77,6 @@ const login = (req, res) => {
         });
 };
 
-module.exports = { getUsers, createUser, getUser, login }
+
+
+module.exports = { getUsers, createUser, getUser, login, updateProfile, getCurrentUser }
