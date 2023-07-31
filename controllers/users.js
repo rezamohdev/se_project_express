@@ -3,35 +3,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const { handleError, JWT_SECRET } = require('../utils/config');
 
-
-
-// GET /users — returns all users
-const getUsers = (req, res) => {
-    User.find({})
-        .then((users) => {
-            res.status(200).send(users);
-        }).catch((err) => {
-            handleError(req, res, err);
-        })
-}
-
-// GET /users/:userId - returns a user by _id
-const getUser = (req, res) => {
-    const { userId } = req.params;
-    User.findById(userId)
-        .orFail()
-        .then((data) => {
-            res.status(200).send(data);
-        }).
-        catch((err) => {
-            console.error(err);
-            handleError(req, res, err);
-
-        });
-}
-
 const getCurrentUser = (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.user._id;
     console.log(userId);
     User.findById(userId)
         .orFail()

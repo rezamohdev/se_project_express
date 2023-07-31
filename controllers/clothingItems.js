@@ -1,6 +1,7 @@
 const clothingItem = require('../models/clothingItems');
 const User = require('../models/users');
 const { handleError } = require('../utils/config');
+const { ERROR_403 } = require('../utils/errors');
 // GET / items — returns all clothing items
 const getClothingItem = (req, res) => {
     clothingItem.find({})
@@ -31,12 +32,12 @@ const createClothingItem = (req, res) => {
 // DELETE / items /: itemId — deletes an item by _id
 const deleteClothingItem = (req, res) => {
     const { itemId } = req.params;
-    const { loggedinUserId } = req.body;
-    const item = User.findOne({ _id: itemId });
+    const { loggedinUserId } = req.user._id;
+    const item = clothingItem.findOne({ _id: itemId }).then((data) => res.send(data));
 
     console.log('item id:', itemId);
     // check if the user is the item owner
-    if (loggedinUserId === item.owner) {
+    if (item.owner.equals(loggedinUserId)) {
         console.log('owner is confirmed!')
         clothingItem.findByIdAndDelete(itemId)
             .orFail()
@@ -50,7 +51,7 @@ const deleteClothingItem = (req, res) => {
 
             });
     }
-    res.status(403).send('You are not authried to delete other user\'s item');
+    res.status(ERROR_403).send('You are not authried to delete other user\'s item');
 }
 
 module.exports = { getClothingItem, createClothingItem, deleteClothingItem };
