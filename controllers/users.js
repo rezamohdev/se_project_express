@@ -24,7 +24,7 @@ const createUser = (req, res) => {
         if (!user) {
             bcrypt.hash(password, 10).then((hash) => {
                 User.create({ name, avatar, email, password: hash })
-                    .then((data) => { res.status(201).send(`user ${namex} created successfully!`) })
+                    .then(() => { res.status(201).send({ message: `user ${name} created successfully!` }) })
                     .catch((err) => { handleError(req, res, err); });
             });
         } else {
