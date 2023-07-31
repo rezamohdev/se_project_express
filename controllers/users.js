@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const { handleError, JWT_SECRET } = require('../utils/config');
+const { ERROR_409, ERROR_401 } = require('../utils/errors');
 
 const getCurrentUser = (req, res) => {
     const { userId } = req.user._id;
@@ -23,13 +24,16 @@ const createUser = (req, res) => {
         if (!user) {
             bcrypt.hash(password, 10).then((hash) => {
                 User.create({ name, avatar, email, password: hash })
-                    .then((data) => { res.status(201).send(data) })
+                    .then((data) => { res.status(201).send(`user ${namex} created successfully!`) })
                     .catch((err) => { handleError(req, res, err); });
             });
+        } else {
+            res.status(ERROR_409).send({ message: 'User already exists' });
         }
     }).catch((err) => {
         console.log(err);
-        throw new Error('This email address is already registered! please try another one.')
+        handleError(req, res, err);
+
     });
 
 };
@@ -40,7 +44,9 @@ const updateProfile = (req, res) => {
         .orFail()
         .then((data) => { res.send(data) }).catch((err) => {
             console.log(err);
-            throw new Error('This email address is already registered! please try another one.')
+            // throw new Error('This email address is already registered! please try another one.')
+            handleError(req, res, err);
+
         });
 }
 
@@ -55,10 +61,10 @@ const login = (req, res) => {
             });
         })
         .catch((err) => {
-            res.status(401).send({ message: err.message });
+            res.status(ERROR_401).send({ message: err.message });
         });
 };
 
 
 
-module.exports = { getUsers, createUser, getUser, login, updateProfile, getCurrentUser }
+module.exports = { createUser, login, updateProfile, getCurrentUser }
