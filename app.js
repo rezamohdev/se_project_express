@@ -25,14 +25,15 @@ const limiter = rateLimit({
 app.use(limiter)
 app.use(cors());
 app.use(helmet())
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.use(routes);
 app.all("*", (req, res) => {
     res.status(ERROR_404).send({ message: "The requested resource not found" })
 })
-app.post('/signin', login);
-app.post('/signup', createUser);
 
-app.use(auth);
+
+// app.use(auth);
 app.listen(PORT, () => {
     console.log(`App started on port: ${PORT}`);
 })
