@@ -1,6 +1,6 @@
 const { ERROR_400, ERROR_404, ERROR_500 } = require('./errors');
 
-module.exports.JWT_SECRET = 'oh_my-god_thank_YOu-SO_Much';
+const { JWT_SECRET = "pwerfull secret" } = process.env;
 
 module.exports.handleError = (req, res, error) => {
     console.error(`error is : ${error}`)
@@ -24,3 +24,4 @@ module.exports.handleError = (req, res, error) => {
     }
 }
 
+module.exports = { JWT_SECRET };
