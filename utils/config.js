@@ -1,4 +1,5 @@
 const { ERROR_400, ERROR_404, ERROR_500 } = require('./errors');
+
 module.exports.JWT_SECRET = 'oh_my-god_thank_YOu-SO_Much';
 
 module.exports.handleError = (req, res, error) => {

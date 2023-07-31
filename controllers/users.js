@@ -55,6 +55,7 @@ const createUser = (req, res) => {
             });
         }
     }).catch((err) => {
+        console.log(err);
         throw new Error('This email address is already registered! please try another one.')
     });
 
@@ -65,6 +66,7 @@ const updateProfile = (req, res) => {
     User.findByIdAndUpdate(userId, { $set: { name, avatar } }, { new: true, runValidators: true })
         .orFail()
         .then((data) => { res.send(data) }).catch((err) => {
+            console.log(err);
             throw new Error('This email address is already registered! please try another one.')
         });
 }

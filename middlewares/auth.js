@@ -5,9 +5,7 @@ const handleAuthError = (res) => {
     res.status(401).send({ message: 'Authorization Error' });
 };
 
-const extractBearerToken = (header) => {
-    return header.replace('Bearer ', '');
-};
+const extractBearerToken = (header) => { header.replace('Bearer ', ''); };
 
 module.exports = (req, res, next) => {
     const { authorization } = req.headers;
@@ -20,12 +18,12 @@ module.exports = (req, res, next) => {
     let payload;
 
     try {
-        payload = jwt.verify(token, 'super-strong-secret');
+        payload = jwt.verify(token, JWT_SECRET);
     } catch (err) {
         return handleAuthError(res);
     }
 
     req.user = payload; // adding the payload to the Request object
 
-    next(); // passing the request further along
+    return next(); // passing the request further along
 };
