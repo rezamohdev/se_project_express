@@ -2,7 +2,7 @@ const { ERROR_400, ERROR_404, ERROR_500 } = require('./errors');
 
 const { JWT_SECRET = "pwerfull secret" } = process.env;
 
-module.exports.handleError = (req, res, error) => {
+const handleError = (req, res, error) => {
     console.error(`error is : ${error}`)
     if (error.name === 'ValidationError') {
         res.status(ERROR_400).send({
@@ -24,4 +24,4 @@ module.exports.handleError = (req, res, error) => {
     }
 }
 
-module.exports = { JWT_SECRET };
+module.exports = { JWT_SECRET, handleError };
