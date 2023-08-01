@@ -5,7 +5,7 @@ const { handleError, JWT_SECRET } = require('../utils/config');
 const { ERROR_409, ERROR_401 } = require('../utils/errors');
 
 const getCurrentUser = (req, res) => {
-    const { userId } = req.user._id;
+    const userId = req.user._id;
     console.log(userId);
     User.findById(userId)
         .orFail()
