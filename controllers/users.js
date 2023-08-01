@@ -24,17 +24,17 @@ const createUser = (req, res) => {
         if (!user) {
             bcrypt.hash(password, 10).then((hash) => {
                 User.create({ name, avatar, email, password: hash })
-                    .then(() => { res.status(201).send({ name, email, avatar }) });
+                    .then(() => { res.status(201).send({ name, email, avatar }) })
                     .catch((err) => { handleError(req, res, err); });
-        });
-} else {
-    res.status(ERROR_409).send({ message: 'User already exists' });
+            });
+        } else {
+            res.status(ERROR_409).send({ message: 'User already exists' });
         }
-    }).catch ((err) => {
-    console.log(err);
-    handleError(req, res, err);
+    }).catch((err) => {
+        console.log(err);
+        handleError(req, res, err);
 
-});
+    });
 
 };
 const updateProfile = (req, res) => {
