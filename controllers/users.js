@@ -24,7 +24,7 @@ const createUser = (req, res) => {
         if (!user) {
             bcrypt.hash(password, 10).then((hash) => {
                 User.create({ name, avatar, email, password: hash })
-                    .then(() => { res.status(201).send({ message: `user ${name} created successfully!` }) })
+                    .then(() => { res.status(201).send({ message: `user ${name} with email: ${email} and image url:${avatar} created successfully!` }) })
                     .catch((err) => { handleError(req, res, err); });
             });
         } else {
@@ -38,7 +38,7 @@ const createUser = (req, res) => {
 
 };
 const updateProfile = (req, res) => {
-    const { userId, } = req.params;
+    const userId = req.user._id;
     const { name, avatar } = req.body;
     User.findByIdAndUpdate(userId, { $set: { name, avatar } }, { new: true, runValidators: true })
         .orFail()
