@@ -49,7 +49,7 @@ const deleteClothingItem = (req, res) => {
                         handleError(req, res, err);
                     });
             } else {
-                res.status(ERROR_403).send('You are not authrized to delete other user\'s item');
+                res.status(ERROR_403).send({ message: 'You are not authrized to delete other user\'s item' });
             }
         }).catch((err) => {
             handleError(req, res, err);
