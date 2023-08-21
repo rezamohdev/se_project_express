@@ -7,7 +7,7 @@ const validator = require('validator');
 
 const clothingItem = new mongoose.Schema({
     name: { type: String, required: true, minLength: 2, maxLength: 30 },
-    weather: { type: String, required: true, enum: ['cold', 'warm', 'hot'] },
+    weather: { type: String, required: true, enum: ['Cold', 'Warm', 'Hot'] },
     imageUrl: {
         type: String, required: true,
         validate: {
