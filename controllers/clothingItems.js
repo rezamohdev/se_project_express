@@ -2,13 +2,17 @@ const clothingItem = require('../models/clothingItems');
 // const User = require('../models/users');
 const { handleError } = require('../utils/config');
 const { ERROR_403 } = require('../utils/errors');
+const UnauthorizedError = require('../errors/unauthorized-err');
+const NotFoundError = require('../errors/not-found-err');
 // GET / items — returns all clothing items
 const getClothingItem = (req, res, next) => {
     clothingItem.find({})
         .then((data) => {
             res.status(200).send(data);
         })
-        .catch(next)
+        .catch(() => {
+            next(new NotFoundError('You are not allowed to make change'))
+        })
 
     // .catch((err) => {
     //     handleError(req, res, err);
@@ -23,7 +27,9 @@ const createClothingItem = (req, res, next) => {
         .then((data) => {
             res.status(200).send(data);
         })
-        .catch(next)
+        .catch(() => {
+            next(new UnauthorizedError('You are not allowed to make change'))
+        })
     // catch((err) => {
     //     console.error(err);
     //     handleError(req, res, err);
@@ -53,10 +59,12 @@ const deleteClothingItem = (req, res, next) => {
                 res.status(ERROR_403).send({ message: 'You are not authrized to delete other user\'s item' });
             }
         })
-        .catch(next)
-        .catch((err) => {
-            handleError(req, res, err);
+        .catch(() => {
+            next(new UnauthorizedError('You are not allowed to make change'))
         })
+    // .catch((err) => {
+    //     handleError(req, res, err);
+    // })
 
 
 }

@@ -30,9 +30,9 @@ app.use(helmet())
 app.post('/signin', login);
 app.post('/signup', createUser);
 app.use(routes);
-app.all("*", (req, res) => {
-    res.status(ERROR_404).send({ message: "The requested resource not found" })
-})
+// app.all("*", (req, res) => {
+//     res.status(ERROR_404).send({ message: "The requested resource not found" })
+// })
 
 
 app.use(errorHandler);

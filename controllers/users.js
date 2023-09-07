@@ -4,6 +4,7 @@ const User = require('../models/users');
 const { handleError, JWT_SECRET } = require('../utils/config');
 const { ERROR_409, ERROR_401 } = require('../utils/errors');
 const NotFoundError = require('../errors/not-found-err');
+const UnauthorizedError = require('../errors/unauthorized-err');
 
 const getCurrentUser = (req, res, next) => {
     const userId = req.user._id;
@@ -15,7 +16,9 @@ const getCurrentUser = (req, res, next) => {
                 throw new NotFoundError('No user with matching ID found');
             }
         })
-        .catch(next)
+        .catch(() => {
+            next(new NotFoundError('The User Id not found'))
+        })
     // .catch((err) => { handleError(req, res, err); })
 }
 
@@ -34,7 +37,9 @@ const createUser = (req, res, next) => {
             res.status(ERROR_409).send({ message: 'User already exists' });
         }
     })
-        .catch(next)
+        .catch(() => {
+            next(new UnauthorizedError('You are not allowed to make change'))
+        })
 
     // .catch((err) => {
     //     console.log(err);
@@ -49,7 +54,9 @@ const updateProfile = (req, res, next) => {
     User.findByIdAndUpdate(userId, { $set: { name, avatar } }, { new: true, runValidators: true })
         .orFail()
         .then((data) => { res.send(data) })
-        .catch(next)
+        .catch(() => {
+            next(new NotFoundError('User Id not found'))
+        })
 
     // .catch((err) => {
     //     console.log(err);
@@ -68,7 +75,9 @@ const login = (req, res, next) => {
                 })
             });
         })
-        .catch(next)
+        .catch(() => {
+            next(new NotFoundError('The Email or user name is wrong: 401'))
+        })
 
     // .catch((err) => {
     //     res.status(ERROR_401).send({ message: err.message });

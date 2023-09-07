@@ -1,5 +1,6 @@
 const clothingItem = require('../models/clothingItems');
 const { handleError } = require('../utils/config');
+const UnauthorizedError = require('../errors/unauthorized-err');
 
 // PUT / items /: itemId / likes — like an item
 module.exports.likeItem = (req, res, next) => {
@@ -10,7 +11,9 @@ module.exports.likeItem = (req, res, next) => {
     )
         .orFail()
         .then((data) => res.status(200).send(data))
-        .catch(next)
+        .catch(() => {
+            next(new UnauthorizedError('You are not allowed to make change'))
+        })
 
     // .catch((err) => {
     //     handleError(req, res, err);
@@ -24,7 +27,9 @@ module.exports.dislikeItem = (req, res, next) => clothingItem.findByIdAndUpdate(
     { new: true },
 ).orFail()
     .then((data) => res.status(200).send(data))
-    .catch(next)
+    .catch(() => {
+        next(new UnauthorizedError('You are not allowed to make change'))
+    })
 
     // .catch((err) => {
     //     handleError(req, res, err);
