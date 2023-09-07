@@ -15,6 +15,7 @@ const getCurrentUser = (req, res, next) => {
             if (!data) {
                 throw new NotFoundError('No user with matching ID found');
             }
+            res.send(data)
         })
         .catch(() => {
             next(new NotFoundError('The User Id not found'))
