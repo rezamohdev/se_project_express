@@ -3,34 +3,35 @@ const clothingItem = require('../models/clothingItems');
 const { handleError } = require('../utils/config');
 const { ERROR_403 } = require('../utils/errors');
 // GET / items — returns all clothing items
-const getClothingItem = (req, res) => {
+const getClothingItem = (req, res, next) => {
     clothingItem.find({})
         .then((data) => {
             res.status(200).send(data);
         })
-        .catch((err) => {
-            // res.status(500).send(`An error has occurred on the server.: `, err);
-            handleError(req, res, err);
-        });
+        .catch(next)
+
+    // .catch((err) => {
+    //     handleError(req, res, err);
+    // });
 }
 // POST / items — creates a new item
-const createClothingItem = (req, res) => {
+const createClothingItem = (req, res, next) => {
     console.log('user id: ', req.user._id);
     // console.log(req.body);
     const { name, weather, imageUrl } = req.body;
     clothingItem.create({ name, weather, imageUrl, owner: req.user._id })
         .then((data) => {
             res.status(200).send(data);
-        }).
-        catch((err) => {
-            console.error(err);
-            // res.status(500).send(`An error has occurred on the server: `);
-            handleError(req, res, err);
+        })
+        .catch(next)
+    // catch((err) => {
+    //     console.error(err);
+    //     handleError(req, res, err);
 
-        });
+    // });
 }
 // DELETE / items /: itemId — deletes an item by _id
-const deleteClothingItem = (req, res) => {
+const deleteClothingItem = (req, res, next) => {
     const { itemId } = req.params;
     const loggedinUserId = req.user._id;
     clothingItem.findOne({ _id: itemId })
@@ -51,7 +52,9 @@ const deleteClothingItem = (req, res) => {
             } else {
                 res.status(ERROR_403).send({ message: 'You are not authrized to delete other user\'s item' });
             }
-        }).catch((err) => {
+        })
+        .catch(next)
+        .catch((err) => {
             handleError(req, res, err);
         })
 

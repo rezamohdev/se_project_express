@@ -7,7 +7,7 @@ const { ERROR_404 } = require('./utils/errors')
 const routes = require('./routes');
 // const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
-const errorHandler = require('./middlewares/error-handler');
+const { errorHandler } = require('./middlewares/error-handler');
 
 
 
