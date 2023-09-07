@@ -7,6 +7,8 @@ const { ERROR_404 } = require('./utils/errors')
 const routes = require('./routes');
 // const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
+const errorHandler = require('./middlewares/error-handler');
+
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db');
@@ -33,7 +35,7 @@ app.all("*", (req, res) => {
 })
 
 
-// app.use(auth);
+app.use(errorHandler);
 app.listen(PORT, () => {
     console.log(`App started on port: ${PORT}`);
 })
