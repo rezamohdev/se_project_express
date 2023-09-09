@@ -5,6 +5,7 @@ const {
     deleteClothingItem } = require('../controllers/clothingItems');
 const { likeItem, dislikeItem } = require('../controllers/likes');
 const auth = require('../middlewares/auth');
+const { validateCardBody } = require('../middlewares/validation');
 
 
 
@@ -12,7 +13,7 @@ const auth = require('../middlewares/auth');
 router.get('/items', getClothingItem);
 
 // POST / items — creates a new item
-router.post('/items', auth, createClothingItem);
+router.post('/items', auth, validateCardBody, createClothingItem);
 
 // DELETE / items /: itemId — deletes an item by _id
 router.delete('/items/:itemId', auth, deleteClothingItem);
