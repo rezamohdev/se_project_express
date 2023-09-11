@@ -10,6 +10,7 @@ const routes = require('./routes');
 // const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const { errorHandler } = require('./middlewares/error-handler');
+const { validateUserInfoBody } = require('./middlewares/validation');
 
 
 
@@ -30,7 +31,7 @@ app.use(limiter)
 app.use(cors());
 app.use(helmet())
 app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signup', validateUserInfoBody, createUser);
 app.use(routes);
 // app.all("*", (req, res) => {
 //     res.status(ERROR_404).send({ message: "The requested resource not found" })
