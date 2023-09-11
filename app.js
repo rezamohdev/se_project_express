@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
 const cors = require("cors");
+const { errors } = require('celebrate');
+
 const { ERROR_404 } = require('./utils/errors')
 const routes = require('./routes');
 // const auth = require('./middlewares/auth');
@@ -33,7 +35,8 @@ app.use(routes);
 // app.all("*", (req, res) => {
 //     res.status(ERROR_404).send({ message: "The requested resource not found" })
 // })
-
+// celebrate error handler
+app.use(errors());
 
 app.use(errorHandler);
 app.listen(PORT, () => {
