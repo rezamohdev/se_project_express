@@ -13,7 +13,7 @@ const { validateItemBody } = require('../middlewares/validation');
 router.get('/items', getClothingItem);
 
 // POST / items — creates a new item
-router.post('/items', auth, validateItemBody, createClothingItem);
+router.post('/items', validateItemBody, auth, createClothingItem);
 
 // DELETE / items /: itemId — deletes an item by _id
 router.delete('/items/:itemId', auth, deleteClothingItem);
