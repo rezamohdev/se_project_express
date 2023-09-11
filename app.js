@@ -10,7 +10,7 @@ const routes = require('./routes');
 // const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const { errorHandler } = require('./middlewares/error-handler');
-const { validateUserInfoBody } = require('./middlewares/validation');
+const { validateUserInfoBody, validateUserLogin } = require('./middlewares/validation');
 
 
 
@@ -30,7 +30,7 @@ const limiter = rateLimit({
 app.use(limiter)
 app.use(cors());
 app.use(helmet())
-app.post('/signin', login);
+app.post('/signin', validateUserLogin, login);
 app.post('/signup', validateUserInfoBody, createUser);
 app.use(routes);
 // app.all("*", (req, res) => {
