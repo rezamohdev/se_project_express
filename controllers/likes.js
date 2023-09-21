@@ -21,16 +21,17 @@ module.exports.likeItem = (req, res, next) => {
 }
 
 // DELETE / items /: itemId / likes — unlike an item
-module.exports.dislikeItem = (req, res, next) => clothingItem.findByIdAndUpdate(
-    req.params.itemId,
-    { $pull: { likes: req.user._id } }, // remove _id from the array
-    { new: true },
-).orFail()
+module.exports.dislikeItem = (req, res, next) => {
+    clothingItem.findByIdAndUpdate(
+        req.params.itemId,
+        { $pull: { likes: req.user._id } }, // remove _id from the array
+        { new: true },
+    ).orFail()
     .then((data) => res.status(200).send(data))
     .catch(() => {
         next(new UnauthorizedError('You are not allowed to make change'))
     })
-
-    // .catch((err) => {
-    //     handleError(req, res, err);
-    // })
+}
+// .catch((err) => {
+//     handleError(req, res, err);
+// })
