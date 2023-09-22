@@ -30,7 +30,13 @@ const limiter = rateLimit({
 // Apply the rate limiting middleware to all requests
 app.use(limiter)
 app.use(cors());
-app.use(helmet())
+app.use(helmet());
+app.get('/crash-test', () => {
+    setTimeout(() => {
+        throw new Error('Server will crash now');
+    }, 0);
+});
+
 app.post('/signin', validateUserLogin, login);
 app.post('/signup', validateUserInfoBody, createUser);
 app.use(requestLogger);
