@@ -20,8 +20,6 @@ const getClothingItem = (req, res, next) => {
 }
 // POST / items — creates a new item
 const createClothingItem = (req, res, next) => {
-    console.log('user id: ', req.user._id);
-    // console.log(req.body);
     const { name, weather, imageUrl } = req.body;
     clothingItem.create({ name, weather, imageUrl, owner: req.user._id })
         .then((data) => {
@@ -45,7 +43,6 @@ const deleteClothingItem = (req, res, next) => {
         .then((item) => {
             // check if the user is the item owner
             if (item.owner.equals(loggedinUserId)) {
-                console.log('owner is confirmed!')
                 clothingItem.findByIdAndDelete(itemId)
                     .orFail()
                     .then((data) => {
