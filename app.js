@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
@@ -7,12 +8,10 @@ const { errors } = require('celebrate');
 
 const { ERROR_404 } = require('./utils/errors')
 const routes = require('./routes');
-// const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const { errorHandler } = require('./middlewares/error-handler');
 const { validateUserInfoBody, validateUserLogin } = require('./middlewares/validation');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db');
@@ -37,14 +36,10 @@ app.get('/crash-test', () => {
     }, 0);
 });
 
+app.use(requestLogger);
 app.post('/signin', validateUserLogin, login);
 app.post('/signup', validateUserInfoBody, createUser);
-app.use(requestLogger);
 app.use(routes);
-// app.all("*", (req, res) => {
-//     res.status(ERROR_404).send({ message: "The requested resource not found" })
-// })
-// celebrate error handler
 
 app.use(errorLogger); // enabling the error logger
 app.use(errors());
