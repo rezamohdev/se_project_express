@@ -1,6 +1,7 @@
 const clothingItem = require('../models/clothingItems');
 const { handleError } = require('../utils/config');
 const UnauthorizedError = require('../errors/unauthorized-err');
+const NotFoundError = require('../errors/not-found-err');
 
 // PUT / items /: itemId / likes — like an item
 module.exports.likeItem = (req, res, next) => {
@@ -9,15 +10,11 @@ module.exports.likeItem = (req, res, next) => {
         { $addToSet: { likes: req.user._id } },
         { new: true }
     )
-        .orFail()
+        .orFail(() => new NotFoundError('The requested resource Not Found!'))
         .then((data) => res.status(200).send(data))
-        .catch(() => {
-            next(new UnauthorizedError('You are not allowed to make change'))
+        .catch((err) => {
+            next(err)
         })
-
-    // .catch((err) => {
-    //     handleError(req, res, err);
-    // });
 }
 
 // DELETE / items /: itemId / likes — unlike an item
@@ -26,12 +23,7 @@ module.exports.dislikeItem = (req, res, next) => {
         req.params.itemId,
         { $pull: { likes: req.user._id } }, // remove _id from the array
         { new: true },
-    ).orFail()
-    .then((data) => res.status(200).send(data))
-    .catch(() => {
-        next(new UnauthorizedError('You are not allowed to make change'))
-    })
+    ).orFail(() => new NotFoundError('The requested resource Not Found!'))
+        .then((data) => res.status(200).send(data))
+        .catch((err) => next(err))
 }
-// .catch((err) => {
-//     handleError(req, res, err);
-// })

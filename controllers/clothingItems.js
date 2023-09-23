@@ -10,58 +10,40 @@ const getClothingItem = (req, res, next) => {
         .then((data) => {
             res.status(200).send(data);
         })
-        .catch(() => {
-            next(new NotFoundError('You are not allowed to make change'))
-        })
-
-    // .catch((err) => {
-    //     handleError(req, res, err);
-    // });
+        .catch((err) => next(err))
 }
 // POST / items — creates a new item
 const createClothingItem = (req, res, next) => {
     const { name, weather, imageUrl } = req.body;
     clothingItem.create({ name, weather, imageUrl, owner: req.user._id })
         .then((data) => {
-            res.status(200).send(data);
+            res.send({ data });
         })
-        .catch(() => {
-            next(new UnauthorizedError('You are not allowed to make change'))
+        .catch((err) => {
+            if (err.name === 'ValidationError') {
+                next(new BadRequestError('Invalid data'));
+            } else { next(err); }
         })
-    // catch((err) => {
-    //     console.error(err);
-    //     handleError(req, res, err);
-
-    // });
 }
 // DELETE / items /: itemId — deletes an item by _id
 const deleteClothingItem = (req, res, next) => {
     const { itemId } = req.params;
     const loggedinUserId = req.user._id;
     clothingItem.findOne({ _id: itemId })
-        .orFail()
+        .orFail(() => new NotFoundError('The requested resource Not Found!'))
         .then((item) => {
             // check if the user is the item owner
             if (item.owner.equals(loggedinUserId)) {
                 clothingItem.findByIdAndDelete(itemId)
-                    .orFail()
+                    .orFail(() => new NotFoundError('The requested resource Not Found!'))
                     .then((data) => {
                         res.status(200).send(data.toJSON());
-                    }).catch((err) => {
-                        console.error(err);
-                        // res.status(500).send(`An error has occurred on the server: `);
-                        handleError(req, res, err);
-                    });
+                    }).catch((err) => next(err));
             } else {
                 res.status(ERROR_403).send({ message: 'You are not authrized to delete other user\'s item' });
             }
         })
-        .catch(() => {
-            next(new UnauthorizedError('You are not allowed to make change'))
-        })
-    // .catch((err) => {
-    //     handleError(req, res, err);
-    // })
+        .catch((err) => next(err))
 
 
 }
