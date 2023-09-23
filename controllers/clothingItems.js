@@ -4,6 +4,7 @@ const { handleError } = require('../utils/config');
 const { ERROR_403 } = require('../utils/errors');
 const UnauthorizedError = require('../errors/unauthorized-err');
 const NotFoundError = require('../errors/not-found-err');
+const BadRequestError = require('../errors/bad-request-err');
 // GET / items — returns all clothing items
 const getClothingItem = (req, res, next) => {
     clothingItem.find({})
@@ -17,7 +18,7 @@ const createClothingItem = (req, res, next) => {
     const { name, weather, imageUrl } = req.body;
     clothingItem.create({ name, weather, imageUrl, owner: req.user._id })
         .then((data) => {
-            res.send({ data });
+            res.send(data);
         })
         .catch((err) => {
             if (err.name === 'ValidationError') {
