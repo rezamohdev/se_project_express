@@ -9,15 +9,15 @@ const UnauthorizedError = require('../errors/unauthorized-err');
 const getCurrentUser = (req, res, next) => {
     const userId = req.user._id;
     User.findById(userId)
-        .orFail()
+        .orFail(() => new NotFoundError('The requested resource Not Found!'))
         .then((data) => {
             if (!data) {
                 throw new NotFoundError('No user with matching ID found');
             }
             res.send(data)
         })
-        .catch(() => {
-            next(new NotFoundError('The User Id not found'))
+        .catch((err) => {
+            next(err)
         })
     // .catch((err) => { handleError(req, res, err); })
 }
@@ -31,21 +31,19 @@ const createUser = (req, res, next) => {
             bcrypt.hash(password, 10).then((hash) => {
                 User.create({ name, avatar, email, password: hash })
                     .then(() => { res.status(201).send({ name, email, avatar }) })
-                    .catch((err) => { handleError(req, res, err); });
+                    .catch((err) => {
+                        if (err.name === 'ValidationError') {
+                            next(new BadRequestError('Invalid data'));
+                        } else { next(err); }
+                    });
             });
         } else {
             res.status(ERROR_409).send({ message: 'User already exists' });
         }
     })
-        .catch(() => {
-            next(new UnauthorizedError('You are not allowed to make change'))
+        .catch((err) => {
+            next(err);
         })
-
-    // .catch((err) => {
-    //     console.log(err);
-    //     handleError(req, res, err);
-
-    // });
 
 };
 const updateProfile = (req, res, next) => {
@@ -55,14 +53,10 @@ const updateProfile = (req, res, next) => {
         .orFail()
         .then((data) => { res.send(data) })
         .catch(() => {
-            next(new NotFoundError('User Id not found'))
+            if (err.name === 'ValidationError') {
+                next(new BadRequestError('Invalid data'));
+            } else { next(err); }
         })
-
-    // .catch((err) => {
-    //     console.log(err);
-    //     handleError(req, res, err);
-
-    // });
 }
 
 const login = (req, res, next) => {
@@ -76,12 +70,8 @@ const login = (req, res, next) => {
             });
         })
         .catch(() => {
-            next(new NotFoundError('The Email or user name is wrong: 401'))
+            next(new UnauthorizedError('The Email or user name is wrong: 401'))
         })
-
-    // .catch((err) => {
-    //     res.status(ERROR_401).send({ message: err.message });
-    // });
 };
 
 
