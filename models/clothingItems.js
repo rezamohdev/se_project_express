@@ -17,7 +17,7 @@ const clothingItem = new mongoose.Schema({
             message: 'You must enter a valid URL',
         }
     },
-    owner: mongoose.Schema.Types.ObjectId,
+    owner: { type: mongoose.Schema.Types.ObjectId, required: true },
     likes: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
         default: [],

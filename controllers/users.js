@@ -13,7 +13,7 @@ const getCurrentUser = (req, res, next) => {
         .orFail(() => new NotFoundError('The requested resource Not Found!'))
         .then((data) => {
             if (!data) {
-                throw new NotFoundError('No user with matching ID found');
+                new NotFoundError('No user with matching ID found');
             }
             res.send(data)
         })

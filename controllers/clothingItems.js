@@ -1,7 +1,7 @@
 const clothingItem = require('../models/clothingItems');
-const { ERROR_403 } = require('../utils/errors');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
+const ForbiddenError = require('../errors/forbidden-err');
 // GET / items — returns all clothing items
 const getClothingItem = (req, res, next) => {
     clothingItem.find({})
@@ -38,7 +38,7 @@ const deleteClothingItem = (req, res, next) => {
                         res.status(200).send(data.toJSON());
                     }).catch((err) => next(err));
             } else {
-                res.status(ERROR_403).send({ message: 'You are not authrized to delete other user\'s item' });
+                new ForbiddenError('You are not authrized to delete other user\'s item');
             }
         })
         .catch((err) => next(err))
