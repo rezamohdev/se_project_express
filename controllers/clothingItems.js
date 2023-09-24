@@ -38,7 +38,7 @@ const deleteClothingItem = (req, res, next) => {
                         res.status(200).send(data.toJSON());
                     }).catch((err) => next(err));
             } else {
-                new ForbiddenError('You are not authrized to delete other user\'s item');
+                throw new ForbiddenError('You are not authrized to delete other user\'s item');
             }
         })
         .catch((err) => next(err))

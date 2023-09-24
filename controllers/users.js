@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const { JWT_SECRET } = require('../utils/config');
-const { ERROR_409 } = require('../utils/errors');
 const NotFoundError = require('../errors/not-found-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
 const BadRequestError = require('../errors/bad-request-err');
@@ -14,7 +13,7 @@ const getCurrentUser = (req, res, next) => {
         .orFail(() => new NotFoundError('No user with matching ID found'))
         .then((data) => {
             if (!data) {
-                new NotFoundError('No user with matching ID found');
+                throw new NotFoundError('No user with matching ID found');
             }
             res.send(data)
         })
@@ -26,7 +25,6 @@ const getCurrentUser = (req, res, next) => {
 // POST /users — creates a new user
 const createUser = (req, res, next) => {
     const { name, avatar, email, password } = req.body;
-    console.log(name, avatar);
     User.findOne({ email }).then((user) => {
         if (!user) {
             bcrypt.hash(password, 10).then((hash) => {
@@ -40,7 +38,7 @@ const createUser = (req, res, next) => {
             });
         } else {
             // res.status(ERROR_409).send({ message: 'User already exists' });
-            new ConflictError(`The request wasn't completed because of a conflict with the resource's current state.`);
+            throw new ConflictError(`The request wasn't completed because of a conflict with the resource's current state.`);
         }
     })
         .catch((err) => {
