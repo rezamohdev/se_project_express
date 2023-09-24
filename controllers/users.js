@@ -6,11 +6,12 @@ const { ERROR_409 } = require('../utils/errors');
 const NotFoundError = require('../errors/not-found-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
 const BadRequestError = require('../errors/bad-request-err');
+const ConflictError = require('../errors/conflict-err');
 
 const getCurrentUser = (req, res, next) => {
     const userId = req.user._id;
     User.findById(userId)
-        .orFail(() => new NotFoundError('The requested resource Not Found!'))
+        .orFail(() => new NotFoundError('No user with matching ID found'))
         .then((data) => {
             if (!data) {
                 new NotFoundError('No user with matching ID found');
@@ -38,7 +39,8 @@ const createUser = (req, res, next) => {
                     });
             });
         } else {
-            res.status(ERROR_409).send({ message: 'User already exists' });
+            // res.status(ERROR_409).send({ message: 'User already exists' });
+            new ConflictError(`The request wasn't completed because of a conflict with the resource's current state.`);
         }
     })
         .catch((err) => {
