@@ -1,20 +1,14 @@
 const router = require('express').Router();
 const userRouter = require('./users');
 const itemRouter = require('./clothingItems')
-const likesRouter = require('./clothingItems')
+const likesRouter = require('./clothingItems');
+const NotFoundError = require('../errors/not-found-err');
 
 router.use('/', userRouter);
 router.use('/', itemRouter);
 router.use('/', likesRouter);
-router.use((req, res) => {
-    if (req.status === 404) {
-        res.status(404).send({
-            message: 'Requested resource not found'
-        });
-    } else {
-        // Continue with the rest of the request
-        res.send('');
-    }
+router.use(() => {
+    throw new NotFoundError(`The page you're looking for not found`);
 });
 
 

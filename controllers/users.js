@@ -37,7 +37,6 @@ const createUser = (req, res, next) => {
                     });
             });
         } else {
-            // res.status(ERROR_409).send({ message: 'User already exists' });
             throw new ConflictError(`The request wasn't completed because of a conflict with the resource's current state.`);
         }
     })
