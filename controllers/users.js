@@ -1,10 +1,11 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
-const { handleError, JWT_SECRET } = require('../utils/config');
-const { ERROR_409, ERROR_401 } = require('../utils/errors');
+const { JWT_SECRET } = require('../utils/config');
+const { ERROR_409 } = require('../utils/errors');
 const NotFoundError = require('../errors/not-found-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
+const BadRequestError = require('../errors/bad-request-err');
 
 const getCurrentUser = (req, res, next) => {
     const userId = req.user._id;
@@ -19,7 +20,6 @@ const getCurrentUser = (req, res, next) => {
         .catch((err) => {
             next(err)
         })
-    // .catch((err) => { handleError(req, res, err); })
 }
 
 // POST /users — creates a new user
@@ -52,7 +52,7 @@ const updateProfile = (req, res, next) => {
     User.findByIdAndUpdate(userId, { $set: { name, avatar } }, { new: true, runValidators: true })
         .orFail()
         .then((data) => { res.send(data) })
-        .catch(() => {
+        .catch((err) => {
             if (err.name === 'ValidationError') {
                 next(new BadRequestError('Invalid data'));
             } else { next(err); }

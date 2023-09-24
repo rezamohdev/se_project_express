@@ -1,6 +1,4 @@
 const clothingItem = require('../models/clothingItems');
-const { handleError } = require('../utils/config');
-const UnauthorizedError = require('../errors/unauthorized-err');
 const NotFoundError = require('../errors/not-found-err');
 
 // PUT / items /: itemId / likes — like an item

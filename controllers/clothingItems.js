@@ -1,8 +1,5 @@
 const clothingItem = require('../models/clothingItems');
-// const User = require('../models/users');
-const { handleError } = require('../utils/config');
 const { ERROR_403 } = require('../utils/errors');
-const UnauthorizedError = require('../errors/unauthorized-err');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 // GET / items — returns all clothing items
